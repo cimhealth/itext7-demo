@@ -5,18 +5,18 @@ import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.List;
-import com.itextpdf.layout.element.ListItem;
-import com.itextpdf.layout.element.Paragraph;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * Created by tonydeng on 2017/2/23.
@@ -98,5 +98,43 @@ public class Chapter01 {
 
         //Close document
         document.close();
+    }
+
+    public void unitedStates(File data) throws IOException {
+        PdfWriter writer = new PdfWriter("united_states.pdf");
+
+        PdfDocument pdf = new PdfDocument(writer);
+
+        Document document = new Document(pdf, PageSize.A4.rotate());
+
+        document.setMargins(20, 20, 20, 20);
+
+        PdfFont font = PdfFontFactory.createFont(FontConstants.HELVETICA);
+        PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+
+        Table table = new Table(new float[]{4, 1, 3, 4, 3, 3, 3, 3, 1});
+
+        table.setWidthPercent(100);
+
+        BufferedReader br = new BufferedReader(new FileReader(data));
+
+        String line = br.readLine();
+        processTable(table, line, bold, true);
+        while ((line = br.readLine()) != null) {
+            processTable(table, line, font, false);
+        }
+        br.close();
+        document.add(table);
+        document.close();
+    }
+
+    private void processTable(Table table, String line, PdfFont font, boolean isHeader) {
+        StringTokenizer tokenizer = new StringTokenizer(line, ";");
+        while (tokenizer.hasMoreTokens()) {
+            if (isHeader)
+                table.addHeaderCell(new Cell().add(new Paragraph(tokenizer.nextToken()).setFont(font)));
+            else
+                table.addCell(new Cell().add(new Paragraph(tokenizer.nextToken()).setFont(font)));
+        }
     }
 }

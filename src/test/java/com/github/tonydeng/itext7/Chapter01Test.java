@@ -42,4 +42,9 @@ public class Chapter01Test extends BaseTest {
                 getFile("images/1.png")
         );
     }
+
+    @Test
+    public void testUnitedStates() throws IOException {
+        chapter.unitedStates(getFile("data/united_states.csv"));
+    }
 }
