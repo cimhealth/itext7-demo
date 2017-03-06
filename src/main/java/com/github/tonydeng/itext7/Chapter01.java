@@ -1,5 +1,6 @@
 package com.github.tonydeng.itext7;
 
+import com.cim120.scu.file.FileUtils;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
@@ -11,14 +12,35 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.ListItem;
 import com.itextpdf.layout.element.Paragraph;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
  * Created by tonydeng on 2017/2/23.
  */
+@Slf4j
 public class Chapter01 {
+    private static PdfFont ZH_FONT, EN_FONT;
+
+    static {
+
+//        int count = fontFactory.registerSystemDirectories();
+//        log.info("register system ZH_FONT count:'{}'", count);
+//        try {
+//            ZH_FONT = fontFactory.createFont("SimSum", PdfEncodings.IDENTITY_H);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        try {
+            ZH_FONT = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H", false);
+            EN_FONT = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void helloWorld(String world) throws FileNotFoundException {
         PdfWriter writer = new PdfWriter("hello.pdf");
@@ -28,33 +50,25 @@ public class Chapter01 {
         document.close();
     }
 
-    public void rickAstley(java.util.List<ListItem> items) throws IOException {
+    public void rickAstley(ListItem... items) throws IOException {
         PdfWriter writer = new PdfWriter("reck_astley.pdf");
-
         //Initialize PDF document
         PdfDocument pdf = new PdfDocument(writer);
 
         // Initialize document
         Document document = new Document(pdf);
 
-        // Create a PdfFont
-        PdfFont font = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
         // Add a Paragraph
-        document.add(new Paragraph("iText is:").setFont(font));
+        document.add(new Paragraph("iText is:").setFont(ZH_FONT));
         // Create a List
         List list = new List()
                 .setSymbolIndent(12)
                 .setListSymbol("\u2022")
-                .setFont(font);
+                .setFont(ZH_FONT);
         // Add ListItem objects
-//        list.add(new ListItem("Never gonna give you up"))
-//                .add(new ListItem("Never gonna let you down"))
-//                .add(new ListItem("Never gonna run around and desert you"))
-//                .add(new ListItem("Never gonna make you cry"))
-//                .add(new ListItem("Never gonna say goodbye"))
-//                .add(new ListItem("Never gonna tell a lie and hurt you"));
-
-        items.forEach(i-> list.add(i));
+        for (ListItem item : items) {
+            list.add(item);
+        }
         // Add the list
         document.add(list);
 
@@ -62,7 +76,7 @@ public class Chapter01 {
         document.close();
     }
 
-    public void quickBrownFox(String dest) throws IOException {
+    public void quickBrownFox(File... images) throws IOException {
         //Initialize PDF writer
         PdfWriter writer = new PdfWriter("quick_brown_fox.pdf");
 
@@ -73,12 +87,12 @@ public class Chapter01 {
         Document document = new Document(pdf);
 
         // Compose Paragraph
-        Image fox = new Image(ImageDataFactory.create(""));
-        Image dog = new Image(ImageDataFactory.create(""));
-        Paragraph p = new Paragraph("The quick brown ")
-                .add(fox)
-                .add(" jumps over the lazy ")
-                .add(dog);
+        Paragraph p = new Paragraph("The quick brown ");
+        for (File image : images) {
+            log.info("image: '{}' '{}'", image, FileUtils.isExists(image));
+            p.add(new Image(ImageDataFactory.create(image.getPath()))).add(" Image ");
+        }
+
         // Add Paragraph to document
         document.add(p);
 

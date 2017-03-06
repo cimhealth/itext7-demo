@@ -6,30 +6,40 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Created by tonydeng on 2017/2/23.
  */
 @Slf4j
-public class Chapter01Test {
-    private static final Chapter01 chapter = new Chapter01();
+public class Chapter01Test extends BaseTest {
+    private Chapter01 chapter = new Chapter01();
 
     @Test
     public void testHelloWorld() throws FileNotFoundException {
         log.info("hello world");
 
-        chapter.helloWorld("Tony Deng,邓涛");
+        chapter.helloWorld("Tony Deng, 邓涛");
     }
 
     @Test
     public void testRickAstley() throws IOException {
-        chapter.rickAstley(Arrays.asList(
+        chapter.rickAstley(
                 new ListItem("Max Deng"),
                 new ListItem("邓华锐"),
                 new ListItem("Tony Deng"),
                 new ListItem("邓涛"),
                 new ListItem("Jane Hao"),
-                new ListItem("郝杰")));
+                new ListItem("郝杰"));
+    }
+
+    @Test
+    public void testQuickBrownFox() throws IOException {
+
+        chapter.quickBrownFox(
+                getFile("images/dog.bmp"),
+                getFile("images/2.jpg"),
+                getFile("images/3.jpg"),
+                getFile("images/1.png")
+        );
     }
 }
