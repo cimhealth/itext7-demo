@@ -1,8 +1,8 @@
 package com.github.tonydeng.itext7;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.itextpdf.kernel.pdf.PdfReader;
+
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 
@@ -23,5 +23,12 @@ public class BaseTest {
             throw new IOException(ex);
         }
         return new File(uri);
+    }
+
+    protected static PdfReader getReader(byte[] file) throws IOException {
+        InputStream is = new ByteArrayInputStream(file);
+        PdfReader reader = new PdfReader(is);
+        reader.setUnethicalReading(true);
+        return reader;
     }
 }

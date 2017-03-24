@@ -16,7 +16,7 @@
 
     <properties>
         <itext.version>7.0.2</itext.version>
-        <scu.version>1.2</scu.version>
+        <scu.version>1.6</scu.version>
     </properties>
     <dependencies>
         <dependency>
@@ -52,6 +52,11 @@
             <groupId>com.cim120.scu</groupId>
             <artifactId>scu-file</artifactId>
             <version>${scu.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tonydeng</groupId>
+            <artifactId>text-image-generator</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
